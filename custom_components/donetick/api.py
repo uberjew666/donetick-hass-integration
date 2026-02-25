@@ -137,7 +137,7 @@ class DonetickApiClient:
             "Content-Type": "application/json",
         }
         
-        params = {"state": state}
+        params = {"value": state}
         
         try:
             async with self._session.get(
