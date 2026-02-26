@@ -130,14 +130,16 @@ class DonetickApiClient:
             _LOGGER.error("Error parsing Donetick thing state response: %s", err)
             return None
 
-    async def async_set_thing_state(self, thing_id: int, state: str) -> bool:
+    async def async_set_thing_state(self, thing_id: int, value: bool) -> None:
         """Set the state of a thing directly."""
         headers = {
             "secretkey": f"{self._token}",
             "Content-Type": "application/json",
         }
         
-        params = {"state": state}
+        params = {
+            "state": str(value).lower(),
+        }
         
         try:
             async with self._session.get(
