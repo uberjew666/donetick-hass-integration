@@ -112,7 +112,7 @@ class DonetickApiClient:
             "secretkey": f"{self._token}",
             "Content-Type": "application/json",
         }
-        
+
         try:
             async with self._session.get(
                 f"{self._base_url}/eapi/v1/things/{thing_id}/state",
@@ -130,17 +130,17 @@ class DonetickApiClient:
             _LOGGER.error("Error parsing Donetick thing state response: %s", err)
             return None
 
-    async def async_set_thing_state(self, thing_id: int, value: bool) -> None:
+    async def async_set_thing_state(self, thing_id: int, value: bool) -> bool:
         """Set the state of a thing directly."""
         headers = {
             "secretkey": f"{self._token}",
             "Content-Type": "application/json",
         }
-        
+
         params = {
             "state": str(value).lower(),
         }
-        
+
         try:
             async with self._session.get(
                 f"{self._base_url}/eapi/v1/things/{thing_id}/state",
@@ -150,7 +150,7 @@ class DonetickApiClient:
             ) as response:
                 response.raise_for_status()
                 return True
-                
+
         except aiohttp.ClientError as err:
             _LOGGER.error("Error setting thing state in Donetick: %s", err)
             raise
@@ -164,13 +164,13 @@ class DonetickApiClient:
             "secretkey": f"{self._token}",
             "Content-Type": "application/json",
         }
-        
+
         params = {}
         if new_state is not None:
             params["set"] = new_state
         if increment is not None:
             params["op"] = increment
-        
+
         try:
             async with self._session.get(
                 f"{self._base_url}/eapi/v1/things/{thing_id}/state/change",
@@ -181,7 +181,7 @@ class DonetickApiClient:
                 response.raise_for_status()
                 data = await response.json()
                 return data.get("state")
-                
+
         except aiohttp.ClientError as err:
             _LOGGER.error("Error changing thing state in Donetick: %s", err)
             raise
